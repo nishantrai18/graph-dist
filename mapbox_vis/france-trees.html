@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>France trees</title><!-- /* TODO */ -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="leaflet.css" />
+    <script src="leaflet.js"></script>
+<!-- /* TODO */ -->
+    <script src="france-latest.osm-t__268690564.otree.js"></script>
+    <script src="france-latest.osm-t__1247150638.itree.js"></script>
+    <script src="france-latest.osm-t__239563337.otree.js"></script>
+    <script src="france-latest.osm-t__343441717.itree.js"></script>
+    <script src="france-latest.osm-t__178766323.otree.js"></script>
+    <script src="france-latest.osm-t__317132987.itree.js"></script>
+    <script src="france-latest.osm-t__2176077397.itree.js"></script>
+    <script src="france-latest.osm-t__1735880612.otree.js"></script>
+    <script src="france-latest.osm-t__1707041948.itree.js"></script>
+    <script src="france-latest.osm-t__1707041948.otree.js"></script>
+<style>
+  #map { height: 1200px; }
+.zoom-controls {
+  width: 250px;
+  position: absolute;
+  top: 10px;
+  right: 150px;
+}
+.small {
+  font-size:12px;
+  line-height:20px;
+  letter-spacing:0;
+}
+.round { border-radius:3px; }
+.dark { color:#fff; }
+.fill-darken2 { background:rgba(0,0,0,0.50); }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="mapview" class="zoom-controls small round app clip dark fill-darken2"></div>
+
+<script type="text/javascript">
+var map = L.map('map').setView([46.84516443029276, 1.5985107421875], 7); /* TODO */
+
+L.tileLayer('http://{s}.tiles.mapbox.com/v4/laurent55.l4g7foa6/{z}/{x}/{y}.png?access_token=put-your-mapbox-key-here'/* 'http://{s}.tiles.mapbox.com/v3/MapID/{z}/{x}/{y}.png' */, {
+    attribution: 'Map data <a href="http://openstreetmap.org">OpenStreetMap</a>, Imagery <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18
+}).addTo(map);
+
+L.control.scale().addTo(map);
+
+var overlays = {} ;
+
+var hue = 0 ;
+
+function add_tree(branches, name) {
+
+  var tree = L.multiPolyline(branches, {
+    color: "hsl(" + hue + ", 100%, 50%)",
+    smoothFactor: 2.0
+  }).addTo(map) ;
+
+  hue = hue + 90 ;
+  if (hue >= 360) hue = 45 ;
+
+  name = name + " (" + branches.length + ")" ;
+
+  var root = L.marker(branches[0][0], {
+    title: name
+  }).addTo(map) ;
+
+  overlays[name] = L.layerGroup([tree, root]);
+}
+
+var baseLayers = {
+/*    "Mapbox": mapbox,
+    "OpenStreetMap": osm
+*/
+};
+
+/* TODO */
+add_tree(france_latest_osm_t__268690564_otree, "diam_out") ;
+add_tree(france_latest_osm_t__1247150638_itree, "diam_in") ;
+add_tree(france_latest_osm_t__239563337_otree, "rad_out") ;
+add_tree(france_latest_osm_t__343441717_itree, "rad_in") ;
+add_tree(france_latest_osm_t__178766323_otree, "12_ep_out") ;
+add_tree(france_latest_osm_t__317132987_itree, "lhay_in") ;
+add_tree(france_latest_osm_t__2176077397_itree, "ne_in") ;
+add_tree(france_latest_osm_t__1735880612_otree, "so_out") ;
+add_tree(france_latest_osm_t__1707041948_itree, "Hendaye_in") ;
+add_tree(france_latest_osm_t__1707041948_otree, "Hendaye_out") ;
+
+L.control.layers(baseLayers, overlays).addTo(map);
+
+
+function updateView (e) {
+    var c = map.getCenter() ;
+    var text = "[" + c.lat + ", " + c.lng + "], " + map.getZoom() ;
+    document.getElementById('mapview').innerHTML = "<span>" + text + "</span>" ;
+}
+
+updateView ('null') ;
+
+map.on('moveend', updateView);
+map.on('zoomend', updateView);
+
+</script>
+
+</body>
+</html>
